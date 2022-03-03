@@ -23,13 +23,7 @@
       <ol class="modal-body"></ol>
 
       <center>
-        <label for="searchInput">Search Books</label>
-        <input
-          type="text"
-          id="searchInput"
-          onchange="searchBooks(event)"
-          class="ml-3"
-        />
+        <input type="text" id="input" class="ml-3" placeholder="Search Books" />
       </center>
 
       <div class="row d-flex"></div>
@@ -57,12 +51,12 @@
         cart.classList.add("d-none");
       };
 
-      const bookData = (books) => {
+      const bookData = (arr) => {
         let singleBook = document.querySelector(".row");
-        books
+        arr
           .map((book) => {
             singleBook.innerHTML += `<div class="card col-md-3  my-2">
-        <img src="${book.img}" class="card-img-top width="70%" height="70%"" alt="...">
+        <img src="${book.img}" class="card-img-top width="70%" height="70%" object-fit=cover" alt="...">
         <div class="card-body">
           <h5 class="card-title">${book.title}</h5>
           <div class="d-flex justify-content-between align-items-center">
@@ -82,24 +76,23 @@
           .join("");
       };
 
-      const searchBooks = (e) => {
-        fetch("https://striveschool-api.herokuapp.com/books")
-          .then((response) => response.json())
-          .then((books) => {
-            books.filter((book) => {
-              book.title === e.target.value;
-            });
-          });
-      };
-
-      searchBooks();
-
       const fetchBooks = () => {
         fetch("https://striveschool-api.herokuapp.com/books")
           .then((response) => response.json())
           .then((books) => {
-            console.log(books);
             bookData(books);
+
+            let input = document.getElementById("input");
+            console.log(input);
+
+            input.addEventListener("input", (e) => {
+              const search = books.filter((book) => {
+                console.log(book);
+                book.title.toLowerCase().includes(e.target.value);
+              });
+              console.log(search);
+              bookData(search);
+            });
           });
       };
 
