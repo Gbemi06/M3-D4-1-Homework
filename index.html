@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+      integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
+      crossorigin="anonymous"
+    />
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <ol class="modal-body"></ol>
+
+      <center>
+        <label for="searchInput">Search Books</label>
+        <input
+          type="text"
+          id="searchInput"
+          onchange="searchBooks(event)"
+          class="ml-3"
+        />
+      </center>
+
+      <div class="row d-flex"></div>
+    </div>
+
+    <script>
+      const cartList = [];
+
+      const addToCart = (e) => {
+        const cart = e.target.closest(".card-body");
+        cart.classList.add("bg-danger");
+        let cartData = cart.children[0].outerText;
+        cartList.push(cartData);
+        console.log(cartList);
+
+        let cartContent = document.querySelector(".modal-body");
+        cartContent.innerHTML = "";
+        cartList.map((contentList) => {
+          cartContent.innerHTML += ` <li>${contentList}</li>`;
+        });
+      };
+
+      const removeBook = (e) => {
+        const cart = e.target.closest(".card");
+        cart.classList.add("d-none");
+      };
+
+      const bookData = (books) => {
+        let singleBook = document.querySelector(".row");
+        books
+          .map((book) => {
+            singleBook.innerHTML += `<div class="card col-md-3  my-2">
+        <img src="${book.img}" class="card-img-top width="70%" height="70%"" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">${book.title}</h5>
+          <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addToCart(event)" data-toggle="modal" data-target="#exampleModal">
+                      add to cart
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary mx-3" onclick="removeBook(event)">
+                      skip
+                    </button>
+                  </div>
+                  <small class="text-muted">${book.category}</small>
+                </div>
+        </div>
+      </div>`;
+          })
+          .join("");
+      };
+
+      const searchBooks = (e) => {
+        fetch("https://striveschool-api.herokuapp.com/books")
+          .then((response) => response.json())
+          .then((books) => {
+            books.filter((book) => {
+              book.title === e.target.value;
+            });
+          });
+      };
+
+      searchBooks();
+
+      const fetchBooks = () => {
+        fetch("https://striveschool-api.herokuapp.com/books")
+          .then((response) => response.json())
+          .then((books) => {
+            console.log(books);
+            bookData(books);
+          });
+      };
+
+      window.onload = () => {
+        fetchBooks();
+      };
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
