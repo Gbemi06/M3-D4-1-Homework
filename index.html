@@ -23,7 +23,13 @@
       <ol class="modal-body"></ol>
 
       <center>
-        <input type="text" id="input" class="ml-3" placeholder="Search Books" />
+        <input
+          type="text"
+          id="input"
+          class="ml-3"
+          placeholder="Search Books"
+          onchange="fetchBooks(event)"
+        />
       </center>
 
       <div class="row d-flex"></div>
@@ -55,8 +61,8 @@
         let singleBook = document.querySelector(".row");
         arr
           .map((book) => {
-            singleBook.innerHTML += `<div class="card col-md-3  my-2">
-        <img src="${book.img}" class="card-img-top width="70%" height="70%" object-fit=cover" alt="...">
+            singleBook.innerHTML += `<div class="card col-xs-12 col-md-4 col-lg-3 my-2">
+        <img src="${book.img}" class="card-img-top width="70%" height="70%"" alt="...">
         <div class="card-body">
           <h5 class="card-title">${book.title}</h5>
           <div class="d-flex justify-content-between align-items-center">
@@ -86,12 +92,15 @@
             console.log(input);
 
             input.addEventListener("input", (e) => {
-              const search = books.filter((book) => {
-                console.log(book);
-                book.title.toLowerCase().includes(e.target.value);
-              });
-              console.log(search);
-              bookData(search);
+              if (e.target.value > 3) {
+                const search = books.filter((book) => {
+                  console.log(input);
+                  console.log(book);
+                  book.title.toLowerCase().includes(e.target.value);
+                });
+                console.log(search);
+                bookData(search);
+              }
             });
           });
       };
